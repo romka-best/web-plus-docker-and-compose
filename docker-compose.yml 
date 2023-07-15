@@ -1,0 +1,50 @@
+version: "3"
+services:
+  database:
+    container_name: database
+    image: "postgres:12.12-alpine"
+    restart: "unless-stopped"
+    networks:
+      - db-network
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-volume:${POSTGRES_PGDATA}
+    env_file:
+      - .db.env
+
+  backend:
+    container_name: backend
+    build: ./backend
+    restart: "unless-stopped"
+    networks:
+      - db-network
+      - network
+    env_file:
+      - .backend.env
+    ports:
+      - "4000:3000"
+    links:
+      - database
+    depends_on:
+      - database
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    restart: "unless-stopped"
+    networks:
+      - network
+    ports:
+      - "8081:80"
+
+networks:
+  db-network:
+    driver: bridge
+    internal: true
+  network:
+    driver: bridge
+
+volumes:
+  db-volume:
+    driver: local
