@@ -1,17 +1,17 @@
 version: "3"
+
 services:
   database:
     container_name: database
     image: "postgres:12.12-alpine"
     restart: "unless-stopped"
+    env_file: .backend.env
     networks:
       - db-network
     ports:
       - "5432:5432"
     volumes:
-      - db-volume:${POSTGRES_PGDATA}
-    env_file:
-      - .db.env
+      - db-volume:/var/lib/postgresql/data
 
   backend:
     container_name: backend
@@ -19,15 +19,12 @@ services:
       context: backend
       dockerfile: Dockerfile
     restart: "unless-stopped"
+    env_file: .backend.env
     networks:
       - db-network
       - network
-    env_file:
-      - .backend.env
     ports:
       - "4000:3000"
-    links:
-      - database
     depends_on:
       - database
 
