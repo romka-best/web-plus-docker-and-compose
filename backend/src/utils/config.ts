@@ -2,7 +2,7 @@ import * as path from 'path';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 export default () => ({
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 4000,
   secretKey:
     process.env.JWT_SECRET ||
     '8f1baf87897472917b20057f7ea78c3a0120ad974977e7533e2c575d02311f99',
